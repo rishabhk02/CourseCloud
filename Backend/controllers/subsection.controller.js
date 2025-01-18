@@ -9,11 +9,11 @@ exports.createSubSection = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
-    const { sectionId, title, description } = req.body;
+    const { courseId, sectionId, title, description } = req.body;
     const video = req.files.video;
 
     // Required field validation 
-    if (!sectionId || !title || !description || !video) {
+    if (!courseId || !sectionId || !title || !description || !video) {
       await session.abortTransaction();
       session.endSession();
       return res.status(400).json({ success: false, message: "All Fields are Required." });
@@ -24,23 +24,24 @@ exports.createSubSection = async (req, res) => {
 
     // Create a new sub-section with the necessary information
     const SubSectionDetails = await SubSection.create([{
+      courseId,
+      sectionId,
       title,
       timeDuration: `${uploadDetails.duration}`,
       description,
       videoUrl: uploadDetails.secure_url,
-      section: sectionId,
     }], { session });
 
     // Update the corresponding section with the newly created sub-section
     const updatedSection = await Section.findByIdAndUpdate(
       sectionId,
-      { $push: { subSection: SubSectionDetails[0]._id } },
+      { $push: { subSections: SubSectionDetails[0]._id } },
       { new: true }
-    ).populate("subSection").session(session);
+    ).populate("subSections").session(session);
 
     await session.commitTransaction();
 
-    return res.status(201).json({ success: true, message: "Sub-section created successfully.", data: updatedSection });
+    return res.status(201).json({ success: true, message: "Sub-section created successfully.", updatedSection });
   } catch (error) {
     console.error(error);
     await session.abortTransaction();
@@ -83,11 +84,11 @@ exports.updateSubSection = async (req, res) => {
 
     await subSection.save({ session });
 
-    const updatedSection = await Section.findById(sectionId).populate("subSection").session(session);
+    const updatedSection = await Section.findById(sectionId).populate("subSections").session(session);
 
     await session.commitTransaction();
 
-    return res.status(200).json({ success: true, message: "Sub-section updated successfully.", data: updatedSection });
+    return res.status(200).json({ success: true, message: "Sub-section updated successfully.", updatedSection });
   } catch (error) {
     await session.abortTransaction();
     console.error(error);
@@ -126,11 +127,11 @@ exports.deleteSubSection = async (req, res) => {
     }
 
     // Find and return the updated section
-    const updatedSection = await Section.findById(sectionId).populate("subSection").session(session);
+    const updatedSection = await Section.findById(sectionId).populate("subSections").session(session);
 
     await session.commitTransaction();
 
-    return res.status(200).json({ success: true, message: "Sub-section deleted successfully.", data: updatedSection });
+    return res.status(200).json({ success: true, message: "Sub-section deleted successfully.", updatedSection });
   } catch (error) {
     await session.abortTransaction();
     console.error(error);

@@ -76,6 +76,9 @@ const courseSchema = new mongoose.Schema({
     type: Number, // Duration in hours
     required: true,
   },
+  benefits: [{
+    type: String
+  }]
 }, { timestamps: true });
 
 module.exports = mongoose.model("Course", courseSchema);

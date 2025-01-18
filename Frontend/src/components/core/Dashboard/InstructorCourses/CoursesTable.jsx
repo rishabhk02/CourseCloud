@@ -8,36 +8,34 @@ import { FaCheck } from "react-icons/fa"
 import { FiEdit2 } from "react-icons/fi"
 import { HiClock } from "react-icons/hi"
 import { RiDeleteBin6Line } from "react-icons/ri"
-import { useNavigate } from "react-router-dom"
-
+import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../../../services/formatDate"
-import {
-  deleteCourse,
-  fetchInstructorCourses,
-} from "../../../../services/operations/courseDetailsAPI"
+import { deleteCourse, fetchInstructorCourses } from "../../../../services/operations/courseDetailsAPI"
 import { COURSE_STATUS } from "../../../../utils/constants"
 import ConfirmationModal from "../../../Common/ConfirmationModal"
 
 export default function CoursesTable({ courses, setCourses }) {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const { token } = useSelector((state) => state.auth)
-  const [loading, setLoading] = useState(false)
-  const [confirmationModal, setConfirmationModal] = useState(null)
-  const TRUNCATE_LENGTH = 30
+  const TRUNCATE_LENGTH = 30;
+  const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+  const [isLoading, setIsLoading] = useState(false);
+  const [confirmationModal, setConfirmationModal] = useState(null);
 
   const handleCourseDelete = async (courseId) => {
-    setLoading(true)
-    await deleteCourse({ courseId: courseId }, token)
-    const result = await fetchInstructorCourses(token)
-    if (result) {
-      setCourses(result)
+    try {
+      setIsLoading(true);
+      await deleteCourse(courseId, token)
+      const result = await fetchInstructorCourses(token)
+      if (result) {
+        setCourses(result)
+      }
+      setConfirmationModal(null);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
-    setConfirmationModal(null)
-    setLoading(false)
   }
-
-  // console.log("All Course ", courses)
 
   return (
     <>
@@ -84,11 +82,11 @@ export default function CoursesTable({ courses, setCourses }) {
                     </p>
                     <p className="text-xs text-richblack-300">
                       {course.courseDescription.split(" ").length >
-                      TRUNCATE_LENGTH
+                        TRUNCATE_LENGTH
                         ? course.courseDescription
-                            .split(" ")
-                            .slice(0, TRUNCATE_LENGTH)
-                            .join(" ") + "..."
+                          .split(" ")
+                          .slice(0, TRUNCATE_LENGTH)
+                          .join(" ") + "..."
                         : course.courseDescription}
                     </p>
                     <p className="text-[12px] text-white">
@@ -110,14 +108,14 @@ export default function CoursesTable({ courses, setCourses }) {
                   </div>
                 </Td>
                 <Td className="text-sm font-medium text-richblack-100">
-                  2hr 30min
+                  {course?.duration} hrs
                 </Td>
                 <Td className="text-sm font-medium text-richblack-100">
-                  ₹{course.price}
+                  ₹{course?.price}
                 </Td>
                 <Td className="text-sm font-medium text-richblack-100 ">
                   <button
-                    disabled={loading}
+                    disabled={isLoading}
                     onClick={() => {
                       navigate(`/dashboard/edit-course/${course._id}`)
                     }}
@@ -127,20 +125,20 @@ export default function CoursesTable({ courses, setCourses }) {
                     <FiEdit2 size={20} />
                   </button>
                   <button
-                    disabled={loading}
+                    disabled={isLoading}
                     onClick={() => {
                       setConfirmationModal({
                         text1: "Do you want to delete this course?",
                         text2:
                           "All the data related to this course will be deleted",
-                        btn1Text: !loading ? "Delete" : "Loading...  ",
+                        btn1Text: !isLoading ? "Delete" : "Loading...  ",
                         btn2Text: "Cancel",
-                        btn1Handler: !loading
+                        btn1Handler: !isLoading
                           ? () => handleCourseDelete(course._id)
-                          : () => {},
-                        btn2Handler: !loading
+                          : () => { },
+                        btn2Handler: !isLoading
                           ? () => setConfirmationModal(null)
-                          : () => {},
+                          : () => { },
                       })
                     }}
                     title="Delete"

@@ -28,7 +28,7 @@ const SubSectionSchema = new mongoose.Schema({
 	},
 	order: {
 		type: Number, // Order of the subsection within the section
-		required: true,
+		// required: true,
 	},
 }, { timestamps: true });
 

@@ -60,8 +60,7 @@ export function getUserDetails(token, navigate) {
       
 
       if (JSON.stringify(currentUser) !== JSON.stringify(userData)) {
-        dispatch(setUser({ ...userData }))
-        // dispatch(setUser(userData));
+        dispatch(setUser({ ...userData }));
       }
     } catch (error) {
       dispatch(logout(navigate));

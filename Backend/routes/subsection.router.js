@@ -12,7 +12,7 @@ const { createSubSection, updateSubSection, deleteSubSection } = require('../con
 router.post("/addSubSection", isAuthenticate, isInstructor, createSubSection);
 
 // Route to update a sub-section, protected by authentication and instructor role
-router.post("/updateSubSection", isAuthenticate, isInstructor, updateSubSection);
+router.put("/updateSubSection", isAuthenticate, isInstructor, updateSubSection);
 
 // Route to delete a sub-section, protected by authentication and instructor role
 router.delete("/deleteSubSection", isAuthenticate, isInstructor, deleteSubSection);

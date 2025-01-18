@@ -23,7 +23,7 @@ router.post("/createCourse", isAuthenticate, isInstructor, createCourse);
 router.post("/updateCourseProgress", isAuthenticate, isStudent, updateCourseProgress);
 
 // Route to edit a course - only accessible by authenticated instructors
-router.put("/editCourse", isAuthenticate, isInstructor, editCourse);
+router.put("/editCourse/:courseId", isAuthenticate, isInstructor, editCourse);
 
 // Route to get the details of a specific course
 router.get("/getCourseDetails/:courseId", getCourseDetails);

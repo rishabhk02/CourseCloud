@@ -13,7 +13,6 @@ export default function MyProfile() {
   const token = localStorage.getItem('token');
   const { user } = useSelector((state) => state.profile);
   useEffect(()=>{
-    console.log('Rishi');
     dispatch(getUserDetails(token,navigate));
   },[]);
 

@@ -71,7 +71,7 @@ exports.createCourse = async (req, res) => {
     );
 
     await session.commitTransaction();
-    return res.status(201).json({ success: true, data: newCourse[0], message: "Course created successfully!" });
+    return res.status(201).json({ success: true, newCourse: newCourse[0], message: "Course created successfully!" });
   } catch (error) {
     await session.abortTransaction();
     console.error(error);
@@ -86,9 +86,9 @@ exports.createCourse = async (req, res) => {
 // Edit Course Details 
 exports.editCourse = async (req, res) => {
   const session = await mongoose.startSession(); session.startTransaction(); try {
-    const id = req.params.courseId;
+    const _id = req.params.courseId;
     const updatedDetails = req.body;
-    const course = await Course.findById(id).session(session);
+    const course = await Course.findById(_id).session(session);
     // Check if the course exists
     if (!course) {
       return res.status(404).json({ success: false, message: "Course not found." });
@@ -119,7 +119,7 @@ exports.editCourse = async (req, res) => {
       populate: { path: "additionalDetails" },
     }).populate("category").populate("ratingAndReviews").populate({
       path: "courseContent",
-      populate: { path: "subSection" },
+      populate: { path: "subSections" },
     }).session(session);
 
     await session.commitTransaction();
@@ -157,8 +157,7 @@ exports.getCourseDetails = async (req, res) => {
     }).populate("category").populate("ratingAndReviews").populate({
       path: "courseContent",
       populate: {
-        path: "subSection",
-        select: "-videoUrl",
+        path: "subSections",
       },
     });
 
@@ -168,8 +167,8 @@ exports.getCourseDetails = async (req, res) => {
 
     // Calculate total duration of the course
     let totalDurationInSeconds = 0;
-    courseDetails.courseContent.forEach((content) => {
-      content.subSection.forEach((subSection) => {
+    courseDetails?.courseContent?.forEach((content) => {
+      content?.subSections?.forEach((subSection) => {
         const timeDurationInSeconds = parseInt(subSection.timeDuration);
         totalDurationInSeconds += timeDurationInSeconds;
       });
@@ -278,7 +277,7 @@ exports.deleteCourse = async (req, res) => {
       // Delete sub-sections of the section
       const section = await Section.findById(sectionId).session(session);
       if (section) {
-        const subSections = section.subSection;
+        const subSections = section.subSections;
         for (const subSectionId of subSections) {
           await SubSection.findByIdAndDelete(subSectionId).session(session);
         }

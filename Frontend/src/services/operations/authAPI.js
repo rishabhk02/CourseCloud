@@ -141,6 +141,6 @@ export function logout(navigate) {
     dispatch(setUser(null));
     dispatch(resetCart());
     localStorage.removeItem("token");
-    navigate("/")
+    navigate("/");
   }
 }

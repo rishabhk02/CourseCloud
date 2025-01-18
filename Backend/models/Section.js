@@ -23,7 +23,7 @@ const sectionSchema = new mongoose.Schema({
   ],
   order: {
     type: Number, // Order of the section within the course
-    required: true,
+    // required: true,
   },
 }, { timestamps: true });
 

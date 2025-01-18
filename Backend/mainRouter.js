@@ -19,6 +19,6 @@ app.use("/payment", paymentRoutes);
 app.use("/profile", profileRoutes);
 app.use("/ratingreview", ratingReviewRoutes);
 app.use('/section', sectionRoutes);
-app.use('/subsectionRoutes', subsectionRoutes);
+app.use('/subsection', subsectionRoutes);
 
 module.exports = app;
