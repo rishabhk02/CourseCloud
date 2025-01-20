@@ -7,25 +7,29 @@ import { getInstructorData } from "../../../services/operations/profileAPI"
 import InstructorChart from "./InstructorDashboard/InstructorChart"
 
 export default function Instructor() {
-  const { token } = useSelector((state) => state.auth)
-  const { user } = useSelector((state) => state.profile)
-  const [loading, setLoading] = useState(false)
-  const [instructorData, setInstructorData] = useState(null)
-  const [courses, setCourses] = useState([])
+  const [courses, setCourses] = useState([]);
+  const token = localStorage.getItem('token');
+  const [loading, setIsLoading] = useState(false);
+  const user = useSelector((state) => state.profile.user);
+  const [instructorData, setInstructorData] = useState(null);
+
+  const fetchInstructorData = async () => {
+    try {
+      setIsLoading(true);
+      const instructorData = await getInstructorData(token);
+      const result = await fetchInstructorCourses(token);
+      if (instructorData?.length) setInstructorData(instructorData);
+      if (result) setCourses(result);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   useEffect(() => {
-    ;(async () => {
-      setLoading(true)
-      const instructorApiData = await getInstructorData(token)
-      const result = await fetchInstructorCourses(token)
-      console.log(instructorApiData)
-      if (instructorApiData.length) setInstructorData(instructorApiData)
-      if (result) {
-        setCourses(result)
-      }
-      setLoading(false)
-    })()
-  }, [])
+    fetchInstructorData();
+  }, []);
 
   const totalAmount = instructorData?.reduce(
     (acc, curr) => acc + curr.totalAmountGenerated,

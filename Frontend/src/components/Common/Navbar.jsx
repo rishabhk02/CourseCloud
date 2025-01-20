@@ -1,41 +1,21 @@
-import { useEffect, useState } from "react"
-import { AiOutlineMenu, AiOutlineShoppingCart } from "react-icons/ai"
-import { BsChevronDown } from "react-icons/bs"
-import { useDispatch, useSelector } from "react-redux"
-import { Link, matchPath, useLocation } from "react-router-dom"
-
-import logo from "../../assets/Logo/Logo-Full-Light.png"
-import { NavbarLinks } from "../../data/navbar-links"
-import { apiConnector } from "../../services/apiConnector"
-import { courseEndpoints } from "../../services/apis"
-import { categories } from "../../services/apis"
-import { ACCOUNT_TYPE } from "../../utils/constants"
+import { useEffect, useState } from "react";
+import { AiOutlineMenu, AiOutlineShoppingCart } from "react-icons/ai";
+import { BsChevronDown } from "react-icons/bs";
+import { useSelector } from "react-redux";
+import { Link, matchPath, useLocation } from "react-router-dom";
+import { NavbarLinks } from "../../data/navbar-links";
+import { apiConnector } from "../../services/apiConnector";
+import { categories } from "../../services/apis";
+import { ACCOUNT_TYPE } from "../../utils/constants";
 import ProfileDropdown from "../core/Auth/ProfileDropdown";
-import { endpoints } from "../../services/apis";
-import { setUser } from "../../slices/profileSlice"
+
 
 function Navbar() {
   const location = useLocation();
-  const dispatch = useDispatch();
   const [courseCategories, setCourseCategories] = useState([]);
-  const [isLogin, setIsLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const user = useSelector((state) => state.profile.user);
   const { totalItems } = useSelector((state) => state.cart);
-
-  const checkIsLogin = async () => {
-    try {
-      const response = await apiConnector("GET", endpoints.TOKEN_VALIDATION_API, null, {
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      });
-      if (response.status === 200) {
-        setIsLogin(true);
-        dispatch(setUser(response.data.user));
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   const fetchAllCategories = async () => {
     try {
@@ -50,7 +30,6 @@ function Navbar() {
   }
 
   useEffect(() => {
-    checkIsLogin();
     fetchAllCategories();
   }, []);
 
@@ -85,7 +64,7 @@ function Navbar() {
                     >
                       <p>{link.title}</p>
                       <BsChevronDown />
-                      <div className="invisible absolute left-[50%] top-[50%] z-[1000] flex w-[200px] translate-x-[-50%] translate-y-[3em] flex-col rounded-lg bg-richblack-5 p-4 text-richblack-900 opacity-0 transition-all duration-150 group-hover:visible group-hover:translate-y-[1.65em] group-hover:opacity-100 lg:w-[300px]" style={{"overflowY": "scroll"}}>
+                      <div className="invisible absolute left-[50%] top-[50%] z-[1000] flex w-[200px] translate-x-[-50%] translate-y-[3em] flex-col rounded-lg bg-richblack-5 p-4 text-richblack-900 opacity-0 transition-all duration-150 group-hover:visible group-hover:translate-y-[1.65em] group-hover:opacity-100 lg:w-[300px]" style={{ "overflowY": "scroll" }}>
                         <div className="absolute left-[50%] top-0 -z-10 h-6 w-6 translate-x-[80%] translate-y-[-40%] rotate-45 select-none rounded bg-richblack-5"></div>
                         {isLoading ? (
                           <p className="text-center">Loading...</p>
@@ -136,21 +115,21 @@ function Navbar() {
               )}
             </Link>
           )}
-          {!isLogin && (
+          {!user && (
             <Link to="/login">
               <button className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100">
                 Log in
               </button>
             </Link>
           )}
-          {!isLogin && (
+          {!user && (
             <Link to="/signup">
               <button className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100">
                 Sign up
               </button>
             </Link>
           )}
-          {isLogin && <ProfileDropdown />}
+          {user && <ProfileDropdown />}
         </div>
         <button className="mr-4 md:hidden">
           <AiOutlineMenu fontSize={24} fill="#AFB2BF" />

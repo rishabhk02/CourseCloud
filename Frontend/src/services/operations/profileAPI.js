@@ -56,10 +56,11 @@ export function getUserDetails(token, navigate) {
       }
 
       let userData = response.data.userDetails;
-      userData.profileImage = userData.profileImage || `https://api.dicebear.com/5.x/initials/svg?seed=${userData.firstName} ${userData.lastName}`;    
-      
+      userData.profileImage = userData.profileImage || `https://api.dicebear.com/5.x/initials/svg?seed=${userData.firstName} ${userData.lastName}`;
+
 
       if (JSON.stringify(currentUser) !== JSON.stringify(userData)) {
+        console.log('hi');
         dispatch(setUser({ ...userData }));
       }
     } catch (error) {
@@ -98,18 +99,16 @@ export async function getUserEnrolledCourses(token) {
 }
 
 export async function getInstructorData(token) {
-  const toastId = toast.loading("Loading...")
-  let result = []
+  const toastId = toast.loading("Loading...");
   try {
     const response = await apiConnector("GET", GET_INSTRUCTOR_DATA_API, null, {
       Authorization: `Bearer ${token}`,
-    })
-    console.log("GET_INSTRUCTOR_DATA_API API RESPONSE............", response)
-    result = response?.data?.courses
+    });
+    return response?.data?.courses;
   } catch (error) {
-    console.log("GET_INSTRUCTOR_DATA_API API ERROR............", error)
+    console.error("GET_INSTRUCTOR_DATA_API API ERROR............", error)
     toast.error("Could Not Get Instructor Data")
+  } finally {
+    toast.dismiss(toastId);
   }
-  toast.dismiss(toastId)
-  return result
 }

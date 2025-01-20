@@ -12,7 +12,6 @@ function OpenRoute({ children }) {
     const verifyLogin = async () => {
       try {
         const loggedIn = await checkIsLogin();
-        console.log('Ramesh', isLoggedIn);
         setIsLoggedIn(loggedIn);
       } catch (error) {
         setIsLoggedIn(false);

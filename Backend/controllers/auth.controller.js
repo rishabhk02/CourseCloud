@@ -268,9 +268,7 @@ exports.resetPassword = async (req, res) => {
 // Checking if token is not expired and valid for protected routes
 exports.checkIsTokenValid = async (req, res) => {
   try {
-    let user = await User.findOne({ _id: req.user._id }).populate("additionalDetails");
-    user.password = null;
-    return res.status(200).json({ success: true, message: 'Token is valid.', user });
+    return res.status(200).json({ success: true, message: 'Token is valid.' });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ success: false, message: 'Internal Server Error.' });
