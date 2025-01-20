@@ -46,13 +46,13 @@ exports.categoryPageDetails = async (req, res) => {
     }
 
     // Courses for the given category
-    const courses = await Category.findById(_id).populate({
+    const selectedCategoryCourses = await Category.findById(_id).populate({
       path: "courses",
       match: { status: "PUBLISHED" },
       populate: "ratingAndReviews",
     });
 
-    if (!courses) {
+    if (!selectedCategoryCourses) {
       return res.status(404).json({ success: false, message: "Category not found." });
     }
 
@@ -85,22 +85,27 @@ exports.categoryPageDetails = async (req, res) => {
         },
       },
       {
-        $project: {
-          _id: 0,
-          course: "$courses",
+        $addFields: {
+          enrolledCount: { $size: "$courses.studentsEnrolled" }, // Add a field for the length of `studentsEnrolled`
         },
       },
       {
         $sort: {
-          "course.sold": -1, // Sort courses by the `sold` field in descending order
+          enrolledCount: -1, // Sort by the length of `studentsEnrolled` in descending order
         },
       },
       {
         $limit: 10, // Limit the result to the top 10 courses
       },
+      {
+        $replaceRoot: {
+          newRoot: "$courses", // Replace the root with the `courses` object
+        },
+      },
     ]);
+    
 
-    return res.status(200).json({ success: true, message: "Category details fetched successfully.", courses, otherCategoryCourses, mostSellingCourses });
+    return res.status(200).json({ success: true, message: "Category details fetched successfully.", selectedCategoryCourses, otherCategoryCourses, mostSellingCourses });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ success: false, message: "An error occurred while fetching category details. Please try again." });

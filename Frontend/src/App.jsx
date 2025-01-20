@@ -63,6 +63,7 @@ function App() {
               <Login />
             </OpenRoute>
           } />
+
         <Route
           path="forgot-password"
           element={
@@ -70,6 +71,7 @@ function App() {
               <ForgotPassword />
             </OpenRoute>
           } />
+
         <Route
           path="update-password/:id"
           element={
@@ -77,6 +79,7 @@ function App() {
               <UpdatePassword />
             </OpenRoute>
           } />
+
         <Route
           path="signup"
           element={
@@ -84,6 +87,7 @@ function App() {
               <Signup />
             </OpenRoute>
           } />
+
         <Route
           path="verify-email"
           element={

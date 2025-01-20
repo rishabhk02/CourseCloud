@@ -1,20 +1,19 @@
-import { useEffect, useRef, useState } from "react"
-import { AiOutlineDown } from "react-icons/ai"
-
-import CourseSubSectionAccordion from "./CourseSubSectionAccordion"
+import { useEffect, useRef, useState } from "react";
+import { AiOutlineDown } from "react-icons/ai";
+import CourseSubSectionAccordion from "./CourseSubSectionAccordion";
 
 export default function CourseAccordionBar({ course, isActive, handleActive }) {
-  const contentEl = useRef(null)
+  const contentEl = useRef(null);
+  const [active, setActive] = useState(false);
+  const [sectionHeight, setSectionHeight] = useState(0);
 
-  // Accordian state
-  const [active, setActive] = useState(false)
   useEffect(() => {
     setActive(isActive?.includes(course._id))
-  }, [isActive])
-  const [sectionHeight, setSectionHeight] = useState(0)
+  }, [isActive]);
+
   useEffect(() => {
     setSectionHeight(active ? contentEl.current.scrollHeight : 0)
-  }, [active])
+  }, [active]);
 
   return (
     <div className="overflow-hidden border border-solid border-richblack-600 bg-richblack-700 text-richblack-5 last:mb-0">
@@ -37,7 +36,7 @@ export default function CourseAccordionBar({ course, isActive, handleActive }) {
           </div>
           <div className="space-x-4">
             <span className="text-yellow-25">
-              {`${course.subSection.length || 0} lecture(s)`}
+              {`${course?.subSections?.length || 0} Lecture(s)`}
             </span>
           </div>
         </div>
@@ -50,7 +49,7 @@ export default function CourseAccordionBar({ course, isActive, handleActive }) {
         }}
       >
         <div className="text-textHead flex flex-col gap-2 px-7 py-6 font-semibold">
-          {course?.subSection?.map((subSec, i) => {
+          {course?.subSections?.map((subSec, i) => {
             return <CourseSubSectionAccordion subSec={subSec} key={i} />
           })}
         </div>

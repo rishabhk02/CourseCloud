@@ -38,10 +38,10 @@ export const courseEndpoints = {
   GET_COURSE_DETAILS: `${BASE_URL}/course/getCourseDetails`,
   UPDATE_SECTION_API: `${BASE_URL}/section/updateSection`,
   UPDATE_SUBSECTION_API: `${BASE_URL}/subsection/updateSubSection`,
+  COURSE_DETAILS_API: `${BASE_URL}/course/getCourseDetails`,
 
 
   GET_ALL_COURSE_API: BASE_URL + "/course/getAllCourses",
-  COURSE_DETAILS_API: BASE_URL + "/course/getCourseDetails",
   LECTURE_COMPLETION_API: BASE_URL + "/course/updateCourseProgress",
   CREATE_RATING_API: BASE_URL + "/course/createRating",
 }
@@ -58,8 +58,9 @@ export const categories = {
 
 // CATALOG PAGE DATA
 export const catalogData = {
-  CATALOGPAGEDATA_API: BASE_URL + "/course/getCategoryPageDetails",
+  CATALOGPAGEDATA_API: `${BASE_URL}/category/getCategoryPageDetails`,
 }
+
 // CONTACT-US API
 export const contactusEndpoint = {
   CONTACT_US_API: BASE_URL + "/contact/submitForm",
