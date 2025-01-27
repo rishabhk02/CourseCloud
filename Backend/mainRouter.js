@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const authRoutes = require('./routes/auth.router');
+const cartRoutes = require('./routes/cart.router');
 const categoryRoutes = require('./routes/category.router');
 const contactRoutes = require('./routes/contact.router');
 const courseRoutes = require('./routes/course.router');
@@ -12,6 +13,7 @@ const subsectionRoutes = require('./routes/subsection.router');
 
 // Setting up routes
 app.use('/auth', authRoutes);
+app.use('/cart', cartRoutes);
 app.use('/category', categoryRoutes);
 app.use("/contact", contactRoutes);
 app.use("/course", courseRoutes);

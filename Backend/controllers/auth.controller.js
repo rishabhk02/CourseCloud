@@ -1,49 +1,40 @@
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 const OTP = require("../models/OTP");
 const User = require("../models/User");
+const Cart = require('../models/Cart');
 const Profile = require("../models/Profile");
 const otpGenerator = require("otp-generator");
 const mailSender = require("../utils/mailSender");
 const passwordUpdateEmailTemplate = require("../mail/templates/passwordUpdateConfirmation");
-const mongoose = require("mongoose");
 
 // User Registration
 exports.register = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
-    // Receiving all the fields from the body
     const { firstName, lastName, email, password, confirmPassword, userRole, otp } = req.body;
 
-    // Mandatory fields validation
     if (!firstName || !lastName || !email || !password || !confirmPassword || !otp) {
       return res.status(400).json({ success: false, message: "All mandatory fields are required." });
     }
 
-    // Password matching
     if (password !== confirmPassword) {
       return res.status(400).json({ success: false, message: "Passwords do not match! Please try again." });
     }
 
-    // Check if email already registered
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(409).json({ success: false, message: "User already exists! Please sign in to continue." });
     }
 
-    // Most recent OTP for email verification
     const otpArr = await OTP.find({ email }).sort({ createdAt: -1 }).limit(1);
-
-    // OTP validation
-    if (otpArr.length === 0) {
-      return res.status(400).json({ success: false, message: "Invalid OTP." });
-    } else if (otp !== otpArr[0].otp) {
+    if (otpArr.length === 0 || otp !== otpArr[0].otp) {
       return res.status(400).json({ success: false, message: "Invalid OTP." });
     }
 
-    // Password Hashing
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await User.create([{
@@ -52,18 +43,22 @@ exports.register = async (req, res) => {
       email,
       password: hashedPassword,
       userRole: userRole,
-      additionalDetails: profile[0]._id,
+      additionalDetails: null,
       profileImage: `${process.env.IMAGE_GENERATOR_API}${firstName} ${lastName}`,
     }], { session });
 
-    // User profile creation
     const profile = await Profile.create([{
-      userId: newUser._id,
+      userId: newUser[0]._id,
       gender: null,
       dateOfBirth: null,
       about: null,
       mobileNumber: null,
     }], { session });
+
+    await Cart.create([{ userId: newUser[0]._id, courses: [] }], { session });
+
+    newUser[0].additionalDetails = profile[0]._id;
+    await newUser[0].save({session});
 
     await session.commitTransaction();
 
@@ -77,7 +72,7 @@ exports.register = async (req, res) => {
   } finally {
     session.endSession();
   }
-}
+};
 
 // Login Controller
 exports.login = async (req, res) => {

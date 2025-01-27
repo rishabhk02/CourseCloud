@@ -3,6 +3,7 @@ import { FiUpload } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import { updateProfileImage } from "../../../../services/operations/SettingsAPI";
 import IconBtn from "../../../Common/IconBtn";
+import toast from "react-hot-toast";
 
 export default function ChangeProfilePicture() {
   const dispatch = useDispatch();
@@ -36,6 +37,10 @@ export default function ChangeProfilePicture() {
   const handleFileUpload = () => {
     try {
       setIsLoading(true)
+      if (!profileImage) {
+        toast.error('Please select image.');
+        return;
+      }
       const formData = new FormData()
       formData.append("profileImage", profileImage)
       dispatch(updateProfileImage(token, formData));

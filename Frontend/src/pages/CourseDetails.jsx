@@ -15,6 +15,7 @@ import { fetchCourseDetails } from "../services/operations/courseDetailsAPI"
 import { BuyCourse } from "../services/operations/studentFeaturesAPI"
 import GetAvgRating from "../utils/avgRating"
 import Error from "./Error"
+import Navbar from "../components/Common/Navbar"
 
 function CourseDetails() {
   const navigate = useNavigate();
@@ -25,7 +26,6 @@ function CourseDetails() {
   const [courseDetail, setCourseDetail] = useState(null);
   const { user } = useSelector((state) => state.profile);
   const [avgReviewCount, setAvgReviewCount] = useState(0);
-  const { loading } = useSelector((state) => state.profile);
   const { paymentLoading } = useSelector((state) => state.course);
   const [totalNoOfLectures, setTotalNoOfLectures] = useState(0);
   const [confirmationModal, setConfirmationModal] = useState(null);
@@ -35,7 +35,6 @@ function CourseDetails() {
   const getCourseDetail = async () => {
     try {
       const res = await fetchCourseDetails(courseId);
-      console.log('rk', res);
       setCourseDetail(res);
     } catch (error) {
       console.error(error);
@@ -104,6 +103,7 @@ function CourseDetails() {
 
   return (
     <>
+      <Navbar />
       <div className="relative w-full bg-richblack-800">
         {/* Hero Section */}
         <div className="mx-auto box-content px-4 lg:w-[1260px] 2xl:relative">

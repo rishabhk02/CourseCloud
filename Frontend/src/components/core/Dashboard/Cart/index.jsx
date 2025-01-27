@@ -1,11 +1,32 @@
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux";
+import RenderCartCourses from "./RenderCartCourses";
+import RenderTotalAmount from "./RenderTotalAmount";
+import { useEffect, useState } from "react";
+import { getCartDetails } from "../../../../services/operations/cartAPI";
+import { addToCart, initializeCart } from "../../../../slices/cartSlice";
 
-import RenderCartCourses from "./RenderCartCourses"
-import RenderTotalAmount from "./RenderTotalAmount"
 
 export default function Cart() {
-  const { total, totalItems } = useSelector((state) => state.cart)
+  const dispatch = useDispatch();
+  const token = localStorage.getItem('token');
+  const courses = useSelector((state) => state.cart.cart)
   const { paymentLoading } = useSelector((state) => state.course)
+
+  const [cart, setCart] = useState(null);
+  const fetchCartData = async() => {
+    try {
+      const response = await getCartDetails(token);
+      if(response){
+        dispatch(initializeCart(response));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(()=>{
+    fetchCartData();
+  },[]);
 
   if (paymentLoading)
     return (
@@ -18,9 +39,9 @@ export default function Cart() {
     <>
       <h1 className="mb-14 text-3xl font-medium text-richblack-5">Cart</h1>
       <p className="border-b border-b-richblack-400 pb-2 font-semibold text-richblack-400">
-        {totalItems} Courses in Cart
+        {courses.length} Courses in Cart
       </p>
-      {total > 0 ? (
+      {courses.length > 0 ? (
         <div className="mt-8 flex flex-col-reverse items-start gap-x-10 gap-y-6 lg:flex-row">
           <RenderCartCourses />
           <RenderTotalAmount />

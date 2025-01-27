@@ -15,7 +15,7 @@ function Navbar() {
   const [courseCategories, setCourseCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const user = useSelector((state) => state.profile.user);
-  const { totalItems } = useSelector((state) => state.cart);
+  const courses = useSelector((state) => state.cart.cart);
 
   const fetchAllCategories = async () => {
     try {
@@ -108,9 +108,9 @@ function Navbar() {
           {user && user?.userRole !== ACCOUNT_TYPE.INSTRUCTOR && (
             <Link to="/dashboard/cart" className="relative">
               <AiOutlineShoppingCart className="text-2xl text-richblack-100" />
-              {totalItems > 0 && (
+              {courses.length > 0 && (
                 <span className="absolute grid w-5 h-5 overflow-hidden text-xs font-bold text-center text-yellow-100 rounded-full -bottom-2 -right-2 place-items-center bg-richblack-600">
-                  {totalItems}
+                  {courses.length}
                 </span>
               )}
             </Link>

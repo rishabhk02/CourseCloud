@@ -1,6 +1,4 @@
 import { toast } from "react-hot-toast"
-
-import rzpLogo from "../../assets/Logo/rzp_logo.png"
 import { resetCart } from "../../slices/cartSlice"
 import { setPaymentLoading } from "../../slices/courseSlice"
 import { apiConnector } from "../apiConnector"
@@ -72,7 +70,7 @@ export async function BuyCourse(
       order_id: orderResponse.data.data.id,
       name: "CourseCloud",
       description: "Thank you for Purchasing the Course.",
-      image: rzpLogo,
+      image: '',
       prefill: {
         name: `${user_details.firstName} ${user_details.lastName}`,
         email: user_details.email,

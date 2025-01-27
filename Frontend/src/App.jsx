@@ -40,9 +40,10 @@ function App() {
   const dispatch = useDispatch();
   const token = localStorage.getItem('token');
   const user = useSelector((state) => state.profile.user);
+  console.log(user);
 
   useEffect(() => {
-    if (!token) return;
+    if (!token || user) return;
     dispatch(getUserDetails(token, navigate));
   }, []);
 
@@ -159,6 +160,7 @@ function App() {
             </>
           )}
         </Route>
+        
 
         {/* For the watching course lectures */}
         <Route
