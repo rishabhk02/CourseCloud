@@ -1,5 +1,5 @@
 const BASE_URL = process.env.REACT_APP_BE_URL;
-console.log(BASE_URL);
+
 
 // AUTH ENDPOINTS
 export const endpoints = {
@@ -14,7 +14,7 @@ export const endpoints = {
 // PROFILE ENDPOINTS
 export const profileEndpoints = {
   GET_USER_DETAILS_API: BASE_URL + "/profile/getUserAllDetails",
-  GET_USER_ENROLLED_COURSES_API: BASE_URL + "/profile/getEnrolledCourses",
+  
   GET_INSTRUCTOR_DATA_API: `${BASE_URL}/profile/instructorDashboard`,
 }
 
@@ -29,16 +29,19 @@ export const studentEndpoints = {
 export const courseEndpoints = {
   CREATE_COURSE_API: `${BASE_URL}/course/createCourse`,
   CREATE_SECTION_API: `${BASE_URL}/section/addSection`,
-  GET_INSTRUCTOR_COURSES_API: `${BASE_URL}/course/getInstructorCourses`,
-  DELETE_COURSE_API: `${BASE_URL}/course/deleteCourse`,
   CREATE_SUBSECTION_API: `${BASE_URL}/subsection/addSubSection`,
-  EDIT_COURSE_API: `${BASE_URL}/course/editCourse`,
-  DELETE_SECTION_API: `${BASE_URL}/section/deleteSection`,
-  DELETE_SUBSECTION_API: `${BASE_URL}/subsection/deleteSubSection`,
+
+  GET_ENROLLED_COURSES_API: `${BASE_URL}/profile/getEnrolledCourses`,
+  GET_INSTRUCTOR_COURSES_API: `${BASE_URL}/course/getInstructorCourses`,
   GET_COURSE_DETAILS: `${BASE_URL}/course/getCourseDetails`,
+
+  EDIT_COURSE_API: `${BASE_URL}/course/editCourse`,
   UPDATE_SECTION_API: `${BASE_URL}/section/updateSection`,
   UPDATE_SUBSECTION_API: `${BASE_URL}/subsection/updateSubSection`,
-  COURSE_DETAILS_API: `${BASE_URL}/course/getCourseDetails`,
+
+  DELETE_COURSE_API: `${BASE_URL}/course/deleteCourse`,
+  DELETE_SECTION_API: `${BASE_URL}/section/deleteSection`,
+  DELETE_SUBSECTION_API: `${BASE_URL}/subsection/deleteSubSection`,
 
 
   GET_ALL_COURSE_API: BASE_URL + "/course/getAllCourses",

@@ -1,46 +1,46 @@
-import { useEffect } from "react"
-import "./App.css"
+import { useEffect } from 'react';
+import './App.css';
 // Redux
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch, useSelector } from 'react-redux';
 // React Router
-import { Route, Routes, useNavigate } from "react-router-dom"
+import { Route, Routes, useNavigate } from 'react-router-dom';
 
 // Components
-import OpenRoute from "./components/core/Auth/OpenRoute"
-import PrivateRoute from "./components/core/Auth/PrivateRoute"
-import AddCourse from "./components/core/Dashboard/AddCourse"
-import Cart from "./components/core/Dashboard/Cart"
-import EditCourse from "./components/core/Dashboard/EditCourse"
-import EnrolledCourses from "./components/core/Dashboard/EnrolledCourses"
-import Instructor from "./components/core/Dashboard/Instructor"
-import MyCourses from "./components/core/Dashboard/MyCourses"
-import MyProfile from "./components/core/Dashboard/MyProfile"
-import Settings from "./components/core/Dashboard/Settings"
-import VideoDetails from "./components/core/ViewCourse/VideoDetails"
-import About from "./pages/About"
-import Catalog from "./pages/Catalog"
-import Contact from "./pages/Contact"
-import CourseDetails from "./pages/CourseDetails"
-import Dashboard from "./pages/Dashboard"
-import Error from "./pages/Error"
-import ForgotPassword from "./pages/ForgotPassword"
+import OpenRoute from './components/core/Auth/OpenRoute';
+import PrivateRoute from './components/core/Auth/PrivateRoute';
+import AddCourse from './components/core/Dashboard/AddCourse';
+import Cart from './components/core/Dashboard/Cart';
+import EditCourse from './components/core/Dashboard/EditCourse';
+import EnrolledCourses from './components/core/Dashboard/EnrolledCourses';
+import Instructor from './components/core/Dashboard/Instructor';
+import MyCourses from './components/core/Dashboard/MyCourses';
+import MyProfile from './components/core/Dashboard/MyProfile';
+import Settings from './components/core/Dashboard/Settings';
+import VideoDetails from './components/core/ViewCourse/VideoDetails';
+import About from './pages/About';
+import Catalog from './pages/Catalog';
+import Contact from './pages/Contact';
+import CourseDetails from './pages/CourseDetails';
+import Dashboard from './pages/Dashboard';
+import Error from './pages/Error';
+import ForgotPassword from './pages/ForgotPassword';
 
 // Pages
-import Home from "./pages/Home"
-import Login from "./pages/Login"
-import Signup from "./pages/Signup"
-import UpdatePassword from "./pages/UpdatePassword"
-import VerifyEmail from "./pages/VerifyEmail"
-import ViewCourse from "./pages/ViewCourse"
-import { getUserDetails } from "./services/operations/profileAPI"
-import { ACCOUNT_TYPE } from "./utils/constants"
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import UpdatePassword from './pages/UpdatePassword';
+import VerifyEmail from './pages/VerifyEmail';
+import ViewCourse from './pages/ViewCourse';
+import { getUserDetails } from './services/operations/profileAPI';
+import { ACCOUNT_TYPE } from './utils/constants';
 
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = localStorage.getItem('token');
   const user = useSelector((state) => state.profile.user);
-  console.log(user);
+  const isLoading = useSelector((state) => state.auth.isLoading);
 
   useEffect(() => {
     if (!token || user) return;
@@ -48,17 +48,23 @@ function App() {
   }, []);
 
   return (
-    <div className="flex min-h-screen w-screen flex-col bg-richblack-900 font-inter">
+    <div className='flex min-h-screen w-screen flex-col bg-richblack-900 font-inter'>
+      {isLoading &&
+        <div className='loader-overlay'>
+          <div className='spinner'></div>
+        </div>
+      }
+
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/courses/:courseId" element={<CourseDetails />} />
-        <Route path="/catalog/:catalogName" element={<Catalog />} />
+        <Route path='/' element={<Home />} />
+        <Route path='/about' element={<About />} />
+        <Route path='/contact' element={<Contact />} />
+        <Route path='/courses/:courseId' element={<CourseDetails />} />
+        <Route path='/catalog/:catalogName' element={<Catalog />} />
 
         {/* Open Route - for Only Non Logged in User */}
         <Route
-          path="login"
+          path='login'
           element={
             <OpenRoute>
               <Login />
@@ -66,7 +72,7 @@ function App() {
           } />
 
         <Route
-          path="forgot-password"
+          path='forgot-password'
           element={
             <OpenRoute>
               <ForgotPassword />
@@ -74,7 +80,7 @@ function App() {
           } />
 
         <Route
-          path="update-password/:id"
+          path='update-password/:id'
           element={
             <OpenRoute>
               <UpdatePassword />
@@ -82,7 +88,7 @@ function App() {
           } />
 
         <Route
-          path="signup"
+          path='signup'
           element={
             <OpenRoute>
               <Signup />
@@ -90,7 +96,7 @@ function App() {
           } />
 
         <Route
-          path="verify-email"
+          path='verify-email'
           element={
             <OpenRoute>
               <VerifyEmail />
@@ -106,11 +112,11 @@ function App() {
           }
         >
           {/* Route for all users */}
-          <Route path="dashboard/my-profile" element={
+          <Route path='dashboard/my-profile' element={
             <PrivateRoute>
               <MyProfile />
             </PrivateRoute>} />
-          <Route path="dashboard/settings" element={
+          <Route path='dashboard/settings' element={
             <PrivateRoute>
               <Settings />
             </PrivateRoute>
@@ -119,22 +125,22 @@ function App() {
           {/* Route only for Instructors */}
           {user?.userRole === ACCOUNT_TYPE.INSTRUCTOR && (
             <>
-              <Route path="dashboard/instructor" element={
+              <Route path='dashboard/instructor' element={
                 <PrivateRoute>
                   <Instructor />
                 </PrivateRoute>
               } />
-              <Route path="dashboard/my-courses" element={
+              <Route path='dashboard/my-courses' element={
                 <PrivateRoute>
                   <MyCourses />
                 </PrivateRoute>
               } />
-              <Route path="dashboard/add-course" element={
+              <Route path='dashboard/add-course' element={
                 <PrivateRoute>
                   <AddCourse />
                 </PrivateRoute>
               } />
-              <Route path="dashboard/edit-course/:courseId" element={
+              <Route path='dashboard/edit-course/:courseId' element={
                 <PrivateRoute>
                   <EditCourse />
                 </PrivateRoute>
@@ -146,13 +152,13 @@ function App() {
           {user?.userRole === ACCOUNT_TYPE.STUDENT && (
             <>
               <Route
-                path="dashboard/enrolled-courses"
+                path='dashboard/enrolled-courses'
                 element={
                   <PrivateRoute>
                     <EnrolledCourses />
                   </PrivateRoute>
                 } />
-              <Route path="/dashboard/cart" element={
+              <Route path='/dashboard/cart' element={
                 <PrivateRoute>
                   <Cart />
                 </PrivateRoute>
@@ -160,7 +166,7 @@ function App() {
             </>
           )}
         </Route>
-        
+
 
         {/* For the watching course lectures */}
         <Route
@@ -173,7 +179,7 @@ function App() {
           {user?.userRole === ACCOUNT_TYPE.STUDENT && (
             <>
               <Route
-                path="view-course/:courseId/section/:sectionId/sub-section/:subSectionId"
+                path='view-course/:courseId/section/:sectionId/sub-section/:subSectionId'
                 element={
                   <PrivateRoute>
                     <VideoDetails />
@@ -184,10 +190,10 @@ function App() {
         </Route>
 
         {/* 404 Page */}
-        <Route path="*" element={<Error />} />
+        <Route path='*' element={<Error />} />
       </Routes>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

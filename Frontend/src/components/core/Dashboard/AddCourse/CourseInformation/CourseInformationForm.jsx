@@ -103,10 +103,6 @@ export default function CourseInformationForm() {
         formData.append("instructions", data.instructions);
         formData.append("thumbnail", data.thumbnail);
 
-        formData.forEach((value, key) => {
-          console.log(`${key}: ${value}`);
-        });
-
         result = await addCourseDetails(formData, token);
       } else if (isFormUpdated()) {
         const currentValues = getValues();

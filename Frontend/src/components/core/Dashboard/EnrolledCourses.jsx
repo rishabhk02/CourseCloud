@@ -3,32 +3,24 @@ import ProgressBar from "@ramonak/react-progress-bar"
 import { BiDotsVerticalRounded } from "react-icons/bi"
 import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
+import { getUserEnrolledCourses } from "../../../services/operations/courseDetailsAPI"
 
-import { getUserEnrolledCourses } from "../../../services/operations/profileAPI"
+
 
 export default function EnrolledCourses() {
-  const { token } = useSelector((state) => state.auth)
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+  const [enrolledCourses, setEnrolledCourses] = useState(null);
 
-  const [enrolledCourses, setEnrolledCourses] = useState(null)
+  const fetchEnrolledCourse = async()=>{
+    const response = await getUserEnrolledCourses(token);
+    if(response){
+      setEnrolledCourses(response);
+    }
+  }
 
   useEffect(() => {
-    ;(async () => {
-      try {
-        const res = await getUserEnrolledCourses(token) // Getting all the published and the drafted courses
-
-        // Filtering the published course out
-        const filterPublishCourse = res.filter((ele) => ele.status !== "DRAFT")
-        // console.log(
-        //   "Viewing all the couse that is PUBLISHED",
-        //   filterPublishCourse
-        // )
-
-        setEnrolledCourses(filterPublishCourse)
-      } catch (error) {
-        console.log("Could not fetch enrolled courses.")
-      }
-    })()
+    fetchEnrolledCourse();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

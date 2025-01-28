@@ -26,7 +26,7 @@ exports.updateProfile = async (req, res) => {
     if (!userDetails) {
       return res.status(404).json({ success: false, message: 'User not found.' });
     }
-    console.log(req.user._id);
+    
 
     // Update user profile
     const userProfile = await Profile.findOneAndUpdate({ userId: userId }, { $set: dataToUpdate });

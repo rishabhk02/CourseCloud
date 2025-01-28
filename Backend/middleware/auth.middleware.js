@@ -47,7 +47,6 @@ exports.isAdmin = async (req, res, next) => {
 // Middleware to check if user is an instructor
 exports.isInstructor = async (req, res, next) => {
   try {
-    console.log(req.user.role);
     if (req.user.role === "INSTRUCTOR") {
       next();
     } else {

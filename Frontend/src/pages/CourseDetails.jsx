@@ -10,7 +10,7 @@ import Footer from "../components/Common/Footer"
 import RatingStars from "../components/Common/RatingStars"
 import CourseAccordionBar from "../components/core/Course/CourseAccordionBar"
 import CourseDetailsCard from "../components/core/Course/CourseDetailsCard"
-import { formatDate } from "../services/formatDate"
+import { formatDate } from "../utils/dateTime"
 import { fetchCourseDetails } from "../services/operations/courseDetailsAPI"
 import { BuyCourse } from "../services/operations/studentFeaturesAPI"
 import GetAvgRating from "../utils/avgRating"
@@ -29,8 +29,6 @@ function CourseDetails() {
   const { paymentLoading } = useSelector((state) => state.course);
   const [totalNoOfLectures, setTotalNoOfLectures] = useState(0);
   const [confirmationModal, setConfirmationModal] = useState(null);
-
-  console.log('Rj', courseId);
 
   const getCourseDetail = async () => {
     try {

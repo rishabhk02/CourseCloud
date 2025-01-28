@@ -17,7 +17,6 @@ export default function EditCourse() {
       setIsLoading(true);
       const result = await getFullDetailsOfCourse(courseId, token);
       if (result) {
-        console.log(result);
         dispatch(setEditCourse(true));
         dispatch(setCourse(result));
       }
